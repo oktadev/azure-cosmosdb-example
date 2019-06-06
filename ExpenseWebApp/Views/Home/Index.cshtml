@@ -1,0 +1,81 @@
+﻿<!-- Summary of Upcoming Expenses -->
+<div class="jumbotron">
+    <h1>@ViewBag.Title</h1>
+    <div class="left">
+        <h3>This month...</h3>
+        <label>Already paid</label>
+        <input type="text" readonly="readonly" class="highlight" value="@string.Format("{0:C}", ViewBag.AlreadyPaid)" />
+        <label>Due today</label>
+        <input type="text" readonly="readonly" class="highlight" value="@string.Format("{0:C}", ViewBag.DueToday)" />
+        <label>Still coming</label>
+        <input type="text" readonly="readonly" class="highlight" value="@string.Format("{0:C}", ViewBag.StillComing)" />
+    </div>
+    <div class="right">
+        <h3>Next...</h3>
+        <label>1 week</label>
+        <input type="text" readonly="readonly" class="highlight" value="@string.Format("{0:C}", ViewBag.Next1Week)" />
+        <label>2 weeks</label>
+        <input type="text" readonly="readonly" class="highlight" value="@string.Format("{0:C}", ViewBag.Next2Weeks)" />
+        <label>1 month</label>
+        <input type="text" readonly="readonly" class="highlight" value="@string.Format("{0:C}", ViewBag.Next1Month)" />
+        <label>2 months</label>
+        <input type="text" readonly="readonly" class="highlight" value="@string.Format("{0:C}", ViewBag.Next2Months)" />
+    </div>
+</div>
+
+<div class="row">
+
+    <!-- List of Expenses -->
+    <h2>List of Expenses</h2>
+    <table>
+        <tr class="header">
+            @*<td class="empty"></td>*@
+            <td>Name</td>
+            <td>Monthly Cost</td>
+        </tr>
+        @if (Model != null)
+        {
+            var total = 0;
+            foreach (var e in Model)
+            {
+                total += e.MonthlyCost;
+                <tr>
+                    <td>@e.Name</td>
+                    <td class="money">@string.Format("{0:C}", e.MonthlyCost)</td>
+                </tr>
+            }
+            <tr>
+                <td class="total">Total</td>
+                <td class="money total">@string.Format("{0:C}", total)</td>
+            </tr>
+        }
+    </table>
+
+    <!-- Add Expense Form -->
+    @using (Html.BeginForm("Create", "Home"))
+    {
+        @Html.AntiForgeryToken()
+
+        <h3>Add Expense</h3>
+
+        <label>Name</label>
+        <input type="text" name="Name" />
+
+        <label>Amount</label>
+        <input type="number" min="0.00" step="1" name="Amount" pattern="[0-9]*" />
+
+        <label>Frequency</label>
+        <select name="Frequency">
+            <option value="w">Weekly</option>
+            <option value="m">Monthly</option>
+            <option value="q">Quarterly</option>
+            <option value="y">Yearly</option>
+        </select>
+
+        <label>Start Date</label>
+        <input type="date" name="StartDate" />
+
+        <input type="submit" value="Add Expense" />
+    }
+
+</div>
